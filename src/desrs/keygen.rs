@@ -1,4 +1,4 @@
-const PC_1: [u8; 56] = [
+static PC_1: [u8; 56] = [
     57, 49, 41, 33, 25, 17,  9,
      1, 58, 50, 42, 34, 26, 18,
     10,  2, 59, 51, 43, 35, 27,
@@ -9,11 +9,11 @@ const PC_1: [u8; 56] = [
     21, 13,  5, 28, 20, 12,  4,
 ];
 
-const SHIFT_SCHEDULE: [u8; 16] = [
+static SHIFT_SCHEDULE: [u8; 16] = [
     1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
 ];
 
-const PC_2: [u8; 48] = [
+static PC_2: [u8; 48] = [
     14, 17, 11, 24,  1,  5,
     3,  28, 15,  6, 21, 10,
     23, 19, 12,  4, 26,  8,
@@ -26,7 +26,7 @@ const PC_2: [u8; 48] = [
 
 fn pc_1(key64: u64) -> u64 {
     let mut key56: u64 = 0;
-    for i in 0_usize..56_usize {
+    for i in 0..56 {
         key56 <<= 1;
         key56 |= (key64 >> (64 - PC_1[i])) & 1;
     }
@@ -39,7 +39,7 @@ macro_rules! lrot {
 
 fn pc_2(key56: u64) -> u64 {
     let mut key48: u64 = 0;
-    for i in 0_usize..48_usize {
+    for i in 0..48 {
         key48 <<= 1;
         key48 |= (key56 >> (56 - PC_2[i])) & 1;
     }
