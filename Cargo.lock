@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "des"
+name = "desrs"
 version = "0.1.0"

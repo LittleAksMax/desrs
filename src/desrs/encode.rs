@@ -171,7 +171,7 @@ fn f(r: u32, k: u64) -> u32 {
     permute(combined)
 }
 
-fn encryption_rounds(m: u64, keys: &[u64; 16]) -> u64 {
+pub fn encryption_rounds(m: u64, keys: &[u64; 16]) -> u64 {
     // split 64 bit block into left and right halves
     let l0: u32 = (m >> 32) as u32;
     let r0: u32 = (m & 0xFFFFFFFF) as u32;
