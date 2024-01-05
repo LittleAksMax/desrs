@@ -9,7 +9,7 @@ macro_rules! invalid_args {
     };
 }
 
-macro_rules! key_from_bytes {
+macro_rules! u64_from_bytes {
     ($bytes:expr) => {
         (($bytes[0] as u64) << 56) |
         (($bytes[1] as u64) << 48) |
@@ -48,13 +48,14 @@ fn main() {
         invalid_args!("Key must be 64 bits (8 ASCII characters)");
     }
 
-    let key: u64 = key_from_bytes!(key_bytes);
+    let key = u64_from_bytes!(key_bytes);
 
     if mode == 'e' {
-        encrypt(data, key);
+        dbg!("{}", encrypt(data, key));
     } else if mode == 'd' {
-        decrypt(data, key);
+        dbg!("{}", decrypt(data, key));
     } else {
         assert!(false);
+        std::process::exit(1);
     }
 }
