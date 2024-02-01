@@ -1,11 +1,10 @@
-use std::{env, process};
+use std::{env, process, str};
 use desrs::desrs::{encrypt, decrypt};
 
 macro_rules! invalid_args {
     ($extra:expr) => {
         eprintln!("{}", $extra);
-        eprintln!("USAGE: desrs [ed] <data> <key>");
-        process::exit(1);           
+        eprintln!("USAGE: desrs [ed] <data> <key>");         
     };
 }
 
@@ -46,16 +45,22 @@ fn main() {
 
     if key_bytes.len() != 8 {
         invalid_args!("Key must be 64 bits (8 ASCII characters)");
+        process::exit(1);  
     }
 
     let key = u64_from_bytes!(key_bytes);
 
     if mode == 'e' {
-        dbg!("{}", encrypt(data, key));
+        let bytes = encrypt(data, key);
+        // print!("0x");
+        for byte in bytes {
+            print!("{}", byte as char);
+        }
+        println!();
     } else if mode == 'd' {
         dbg!("{}", decrypt(data, key));
     } else {
         assert!(false);
-        std::process::exit(1);
+        process::exit(1);
     }
 }
