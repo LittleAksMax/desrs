@@ -190,6 +190,27 @@ pub fn encryption_rounds(m: u64, keys: &[u64; 16]) -> u64 {
     ip_inv((l as u64) << 32 | (r as u64))
 }
 
+
+pub fn decryption_rounds(m: u64, keys: &[u64; 16]) -> u64 {
+    // split 64 bit block into left and right halves
+    let l0: u32 = (m >> 32) as u32;
+    let r0: u32 = (m & 0xFFFFFFFF) as u32;
+    
+    let mut l: u32 = l0;
+    let mut r: u32 = r0;
+
+    for i in (0..16).rev() {
+        // L(n+1) = Rn
+        // R(n+1) = Ln XOR f(Rn, K(n+1))
+
+        l = r;
+        r = l ^ f(r, keys[i]);
+    }
+
+    ip((l as u64) << 32 | (r as u64))
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::{ip, expand, combine_and_expand_r, sbox, permute, f, S1};

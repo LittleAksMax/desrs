@@ -1,4 +1,4 @@
-use std::{env, process, str};
+use std::{env, process};
 use desrs::desrs::{encrypt, decrypt};
 
 macro_rules! invalid_args {
@@ -26,14 +26,17 @@ fn main() {
 
     if args.len() != 4 {
         invalid_args!("You need 4 arguments.");
+        process::exit(1);
     }
 
     if !args[1].is_ascii() || !args[2].is_ascii() || !args[3].is_ascii() {
         invalid_args!("All arguments must be ASCII.");
+        process::exit(1);
     }
 
     if args[1].len() != 1 || (!args[1].ends_with('e') && !args[1].ends_with('d')) {
         invalid_args!("[ed] argument must be either simply 'e' or 'd'");
+        process::exit(1);
     }
 
     // extract what should be the only character in the first argument
@@ -45,20 +48,23 @@ fn main() {
 
     if key_bytes.len() != 8 {
         invalid_args!("Key must be 64 bits (8 ASCII characters)");
-        process::exit(1);  
+        process::exit(1);
     }
 
     let key = u64_from_bytes!(key_bytes);
 
     if mode == 'e' {
         let bytes = encrypt(data, key);
-        // print!("0x");
         for byte in bytes {
-            print!("{}", byte as char);
+            print!("{:#08b} ", byte);
         }
         println!();
     } else if mode == 'd' {
-        dbg!("{}", decrypt(data, key));
+        let bytes = decrypt(data, key);
+        for byte in bytes {
+            print!("{} ", byte);
+        }
+        println!();
     } else {
         assert!(false);
         process::exit(1);

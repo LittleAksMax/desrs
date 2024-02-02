@@ -43,8 +43,22 @@ pub fn encrypt(data: &[u8], key: u64) -> Vec<u8> {
 }
 
 pub fn decrypt(data: &[u8], key: u64) -> Vec<u8> {
-    println!("[DECRYPTING]");
-    dbg!(data);
-    dbg!(key);
-    vec![]
+    assert! (data.len() % 8 == 0);
+    let keys = keygen::create_subkeys(key);
+
+    let mut decrypted: Vec<u8> = Vec::new();
+
+    for i in 0..(data.len() / 8) {
+        let u64_dec = encode::decryption_rounds(u64_from_bytes!(data[(i*8)..]), &keys);
+        decrypted.push((u64_dec >> 56) as u8);
+        decrypted.push(((u64_dec >> 48) as u8) & 0xFF);
+        decrypted.push(((u64_dec >> 40) as u8) & 0xFF);
+        decrypted.push(((u64_dec >> 32) as u8) & 0xFF);
+        decrypted.push(((u64_dec >> 24) as u8) & 0xFF);
+        decrypted.push(((u64_dec >> 16) as u8) & 0xFF);
+        decrypted.push(((u64_dec >> 8) as u8) & 0xFF);
+        decrypted.push((u64_dec as u8) & 0xFF);
+    }
+
+    decrypted
 }
