@@ -42,7 +42,7 @@ fn main() {
     // extract what should be the only character in the first argument
     let mode = args[1].chars().next().unwrap();
 
-    let data = args[2].as_bytes();
+    let data: &[u8] = &[0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF];// args[2].as_bytes();
 
     let key_bytes = args[3].as_bytes();
 
@@ -51,12 +51,12 @@ fn main() {
         process::exit(1);
     }
 
-    let key = u64_from_bytes!(key_bytes);
+    let key = 0x133457799BBCDFF1; //u64_from_bytes!(key_bytes);
 
     if mode == 'e' {
         let bytes = encrypt(data, key);
         for byte in bytes {
-            print!("{:#08b} ", byte);
+            print!("{:#02x} ", byte);
         }
         println!();
     } else if mode == 'd' {

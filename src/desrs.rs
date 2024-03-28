@@ -62,3 +62,32 @@ pub fn decrypt(data: &[u8], key: u64) -> Vec<u8> {
 
     decrypted
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{encrypt, decrypt};
+
+    static K: u64 = 0x133457799BBCDFF1;
+    static M: &[u8] = &[0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF];
+    static C: &[u8] = &[0x85, 0xE8, 0x13, 0x54, 0x0F, 0x0A, 0xB4, 0x05];
+
+    #[test]
+    fn encryption_works_correctly() {
+        let c_obtained = encrypt(M, K);
+
+        assert_eq!(c_obtained.len(), C.len());
+        for i in 0..C.len() {
+            assert_eq!(C[i], c_obtained[i]);
+        }
+    }
+
+    #[test]
+    fn decryption_works_correctly() {
+        let m_obtained = decrypt(C, K);
+
+        assert_eq!(m_obtained.len(), M.len());
+        for i in 0..M.len() {
+            assert_eq!(M[i], m_obtained[i]);
+        }
+    }
+}
